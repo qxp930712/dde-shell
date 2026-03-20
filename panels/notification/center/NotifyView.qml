@@ -69,6 +69,25 @@ Control {
         property int pendingFocusIndex: -1  // Index to focus after expand operation
         property bool panelShown: false
 
+        // ListView滚轮回弹行为是默认行为，需要手动修正
+        onHeightChanged: {
+            if (contentHeight > height && contentY > contentHeight - height) {
+                contentY = Math.max(0, contentHeight - height)
+            }
+        }
+        onContentHeightChanged: {
+            if (contentHeight > height && contentY > contentHeight - height) {
+                contentY = Math.max(0, contentHeight - height)
+            }
+        }
+        onContentYChanged: {
+            if (contentY < -1) {
+                contentY = 0
+            } else if (contentHeight > height && contentY > contentHeight - height + 1) {
+                contentY = contentHeight - height
+            }
+        }
+
         // Forward signals from delegate to root for Tab cycling
         function gotoHeaderFirst() { root.gotoHeaderFirst() }
         function gotoHeaderLast() { root.gotoHeaderLast() }
